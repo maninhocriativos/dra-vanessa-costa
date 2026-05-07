@@ -217,15 +217,17 @@ a {
 
 .hero-inner {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(390px, 0.78fr);
-  gap: clamp(32px, 5vw, 70px);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
+  gap: clamp(44px, 6vw, 92px);
   align-items: center;
   min-height: calc(100svh - 210px);
   padding: 58px 0 22px;
 }
 
 .hero-copy {
-  max-width: 720px;
+  position: relative;
+  z-index: 4;
+  max-width: 680px;
   padding-left: clamp(0px, 3vw, 54px);
 }
 
@@ -256,11 +258,16 @@ h3 {
   line-height: 0.98;
 }
 
-h1 {
+.hero-title {
   color: var(--gold-2);
-  max-width: 13ch;
-  font-size: clamp(3.8rem, 5.9vw, 6.7rem);
-  text-wrap: balance;
+  max-width: 690px;
+  font-size: clamp(3.35rem, 5.05vw, 5.85rem);
+  line-height: 0.91;
+  text-wrap: unset;
+}
+
+.hero-title span {
+  display: block;
 }
 
 h2 {
@@ -279,10 +286,10 @@ p {
 }
 
 .hero-copy p {
-  max-width: 620px;
+  max-width: 560px;
   margin: 28px 0 0;
   color: #fff;
-  font-size: clamp(1.04rem, 1.28vw, 1.22rem);
+  font-size: clamp(1rem, 1.16vw, 1.14rem);
   font-weight: 600;
   text-wrap: pretty;
 }
@@ -296,6 +303,7 @@ p {
 
 .hero-portrait {
   position: relative;
+  z-index: 2;
   align-self: stretch;
   display: grid;
   align-items: end;
@@ -304,7 +312,7 @@ p {
 .hero-portrait img {
   position: relative;
   z-index: 2;
-  width: min(560px, 100%);
+  width: min(520px, 100%);
   max-height: calc(100svh - 128px);
   margin-left: auto;
   object-fit: cover;
@@ -449,7 +457,7 @@ p {
 .about,
 .integrative {
   display: grid;
-  grid-template-columns: minmax(0, 1.06fr) minmax(360px, 0.94fr);
+  grid-template-columns: minmax(0, 1.03fr) minmax(360px, 0.97fr);
   gap: 62px;
   align-items: center;
   padding: 92px 0;
@@ -458,7 +466,7 @@ p {
 .about-copy p,
 .integrative-copy p,
 .cta-card p {
-  max-width: 730px;
+  max-width: 660px;
   color: #fff;
   font-size: 1.02rem;
   text-wrap: pretty;
@@ -466,41 +474,51 @@ p {
 
 .gold-list {
   display: grid;
-  gap: 12px;
-  margin: 28px 0 0;
+  gap: 14px;
+  max-width: 680px;
+  margin: 32px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .gold-list li {
   position: relative;
-  padding-left: 34px;
+  min-height: 54px;
+  padding: 15px 18px 15px 48px;
+  border: 1px solid rgba(245, 216, 140, 0.18);
+  border-radius: 8px;
   color: #fff;
-  font-size: clamp(1.02rem, 1.6vw, 1.34rem);
+  background: linear-gradient(90deg, rgba(245, 216, 140, 0.08), rgba(255, 255, 255, 0.018));
+  font-size: clamp(0.98rem, 1.18vw, 1.15rem);
   font-weight: 700;
 }
 
 .gold-list li::before {
   position: absolute;
-  left: 0;
+  top: 50%;
+  left: 18px;
   color: var(--gold);
   content: "✓";
+  transform: translateY(-50%);
 }
 
 .about-media {
   position: relative;
-  min-height: 530px;
+  min-height: 560px;
   overflow: hidden;
   border-radius: 8px;
-  background: linear-gradient(135deg, rgba(245, 216, 140, 0.18), transparent 52%);
+  border: 1px solid rgba(245, 216, 140, 0.18);
+  background:
+    radial-gradient(circle at 24% 20%, rgba(245, 216, 140, 0.18), transparent 16rem),
+    linear-gradient(135deg, rgba(245, 216, 140, 0.12), rgba(255, 255, 255, 0.018) 52%);
 }
 
 .about-media img {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 78%;
-  height: 92%;
+  width: 76%;
+  height: 88%;
   object-fit: cover;
   object-position: center top;
   filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.55));
@@ -508,8 +526,8 @@ p {
 
 .years-card {
   position: absolute;
-  top: 40px;
-  left: 42px;
+  top: 44px;
+  left: 44px;
   z-index: 2;
   display: grid;
   width: 210px;
@@ -525,7 +543,7 @@ p {
 
 .years-card strong {
   font-family: "Playfair Display", serif;
-  font-size: 5.2rem;
+  font-size: 5rem;
   line-height: 0.78;
 }
 
@@ -1023,9 +1041,10 @@ p {
     padding: 58px 0 24px;
   }
 
-  h1 {
-    max-width: 9ch;
-    font-size: clamp(3.2rem, 14vw, 4.6rem);
+  .hero-title {
+    max-width: 100%;
+    font-size: clamp(3.05rem, 13.2vw, 4.35rem);
+    line-height: 0.94;
   }
 
   h2 {
