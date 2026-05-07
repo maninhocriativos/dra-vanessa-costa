@@ -1,0 +1,8 @@
+name = "dra-vanessa-costa-leads"
+main = "worker.js"
+compatibility_date = "2026-05-07"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dra-vanessa-costa"
+database_id = "61dd0223-eef2-4b9b-8d71-e6b3bb0b656b"
