@@ -13,13 +13,14 @@ Landing page estática para estética premium em Manaus, focada em conversão vi
 
 ## Deploy
 
-O projeto não usa build, dependências NPM ou framework. No Netlify, publique a raiz do repositório.
+O projeto não usa build, dependências NPM ou framework. Para Cloudflare Pages, publique a raiz do repositório.
 
-```toml
-[build]
-  publish = "."
-  command = ""
-```
+Configuração:
+
+- Build command: vazio
+- Build output directory: `.`
+- Functions directory: `functions`
+- D1 binding: `DB` conectado ao banco `dra-vanessa-costa`
 
 ## WhatsApp
 

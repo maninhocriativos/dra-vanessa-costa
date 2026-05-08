@@ -53,8 +53,7 @@ const whatsappNumber = "5592985338279";
 const whatsappMessage =
   "Olá, Dra. Vanessa! Vim pelo site e gostaria de agendar uma avaliação.";
 
-// Fill this after publishing the Cloudflare Worker.
-const leadEndpoint = window.DRA_VANESSA_LEAD_ENDPOINT || "";
+const leadEndpoint = window.DRA_VANESSA_LEAD_ENDPOINT || "/api/leads";
 let pendingWhatsappUrl = "";
 
 const buildWhatsappUrl = ({ name, phone } = {}) => {
