@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS leads (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   phone TEXT NOT NULL,
+  procedure TEXT,
   source TEXT DEFAULT 'Landing page Dra. Vanessa Costa',
   page_url TEXT,
   user_agent TEXT,

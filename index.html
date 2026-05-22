@@ -21,7 +21,7 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/style.css?v=20260522-lead-modal" />
   </head>
   <body>
     <header class="site-header" data-header>
@@ -256,17 +256,27 @@
       <div class="lead-backdrop" data-lead-close></div>
       <form class="lead-dialog" data-lead-form>
         <button class="lead-close" type="button" aria-label="Fechar" data-lead-close>×</button>
-        <span class="eyebrow">Avaliação premium</span>
-        <h2>Antes de abrir o WhatsApp</h2>
-        <p>Informe seus dados para a equipe identificar seu atendimento e dar continuidade com mais agilidade.</p>
-        <label>
-          Nome
+        <span class="lead-kicker">Agendamento</span>
+        <h2>Vamos entender seu caso</h2>
+        <p>Preencha seus dados para iniciar o atendimento pelo WhatsApp.</p>
+        <label class="lead-field">
+          <span>Nome</span>
           <input type="text" name="name" autocomplete="name" placeholder="Seu nome" required />
         </label>
-        <label>
-          WhatsApp
-          <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="(92) 98533-8279" required />
+        <label class="lead-field">
+          <span>Telefone</span>
+          <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="(92) 99999-9999" required />
         </label>
+        <fieldset class="procedure-field">
+          <legend>Qual procedimento você deseja?</legend>
+          <button class="procedure-option" type="button" data-procedure-option="Harmonização facial">
+            Harmonização facial
+          </button>
+          <button class="procedure-option" type="button" data-procedure-option="Exame Quântico">
+            Exame Quântico
+          </button>
+        </fieldset>
+        <input type="hidden" name="procedure" data-procedure-input required />
         <input type="hidden" name="source" value="Landing page Dra. Vanessa Costa" />
         <button class="btn btn-gold" type="submit">Continuar para o WhatsApp</button>
         <small data-lead-status></small>
@@ -281,6 +291,6 @@
       WhatsApp
     </a>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=20260522-lead-modal"></script>
   </body>
 </html>

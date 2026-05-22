@@ -18,18 +18,21 @@ export default {
       const payload = await request.json();
       const name = String(payload.name || "").trim();
       const phone = String(payload.phone || "").trim();
+      const procedure = String(payload.procedure || "").trim();
       const source = String(payload.source || "Landing page Dra. Vanessa Costa").trim();
       const pageUrl = String(payload.pageUrl || "").trim();
       const userAgent = request.headers.get("user-agent") || "";
 
-      if (!name || !phone) {
-        return Response.json({ error: "Name and phone are required" }, { status: 400, headers: corsHeaders });
+      if (!name || !phone || !procedure) {
+        return Response.json({ error: "Name, phone and procedure are required" }, { status: 400, headers: corsHeaders });
       }
 
+      await env.DB.prepare("ALTER TABLE leads ADD COLUMN procedure TEXT").run().catch(() => {});
+
       await env.DB.prepare(
-        "INSERT INTO leads (name, phone, source, page_url, user_agent) VALUES (?, ?, ?, ?, ?)"
+        "INSERT INTO leads (name, phone, procedure, source, page_url, user_agent) VALUES (?, ?, ?, ?, ?, ?)"
       )
-        .bind(name, phone, source, pageUrl, userAgent)
+        .bind(name, phone, procedure, source, pageUrl, userAgent)
         .run();
 
       return Response.json({ ok: true }, { headers: corsHeaders });

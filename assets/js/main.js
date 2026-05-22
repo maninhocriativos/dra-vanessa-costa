@@ -48,16 +48,20 @@ const leadModal = document.querySelector("[data-lead-modal]");
 const leadForm = document.querySelector("[data-lead-form]");
 const leadStatus = document.querySelector("[data-lead-status]");
 const leadCloseButtons = document.querySelectorAll("[data-lead-close]");
-const whatsappLinks = document.querySelectorAll('a[href*="wa.me/"]');
+const procedureButtons = document.querySelectorAll("[data-procedure-option]");
+const procedureInput = document.querySelector("[data-procedure-input]");
+const leadTriggerLinks = document.querySelectorAll("a.btn, .treatment-card a, .whatsapp-float, .social-dot");
 const whatsappNumber = "5592985338279";
-const whatsappMessage =
-  "Olá, Dra. Vanessa! Vim pelo site e gostaria de agendar uma avaliação.";
+const whatsappMessage = "Olá, Dra. Vanessa! Vim pelo site e gostaria de agendar um atendimento.";
 
 const leadEndpoint = window.DRA_VANESSA_LEAD_ENDPOINT || "/api/leads";
 let pendingWhatsappUrl = "";
 
-const buildWhatsappUrl = ({ name, phone } = {}) => {
-  const details = name || phone ? `\n\nMeu nome: ${name || ""}\nWhatsApp: ${phone || ""}` : "";
+const buildWhatsappUrl = ({ name, phone, procedure } = {}) => {
+  const details =
+    name || phone || procedure
+      ? `\n\nNome: ${name || ""}\nProcedimento: ${procedure || ""}\nTelefone: ${phone || ""}`
+      : "";
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage + details)}`;
 };
 
@@ -67,6 +71,7 @@ const openLeadModal = (url) => {
   leadModal.classList.add("is-open");
   leadModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
+  if (leadStatus) leadStatus.textContent = "";
   leadForm?.querySelector("input[name='name']")?.focus();
 };
 
@@ -77,8 +82,24 @@ const closeLeadModal = () => {
   document.body.classList.remove("modal-open");
 };
 
-whatsappLinks.forEach((link) => {
-  link.dataset.whatsappCapture = "true";
+const selectProcedure = (procedure) => {
+  if (!procedureInput) return;
+  procedureInput.value = procedure;
+  procedureButtons.forEach((button) => {
+    button.classList.toggle("is-selected", button.dataset.procedureOption === procedure);
+  });
+  if (leadStatus) leadStatus.textContent = "";
+};
+
+procedureButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    selectProcedure(button.dataset.procedureOption || "");
+  });
+});
+
+leadTriggerLinks.forEach((link) => {
+  if (link.dataset.leadCapture === "true") return;
+  link.dataset.leadCapture = "true";
   link.addEventListener("click", (event) => {
     event.preventDefault();
     openLeadModal(link.href);
@@ -105,11 +126,17 @@ leadForm?.addEventListener("submit", async (event) => {
   const lead = {
     name: String(formData.get("name") || "").trim(),
     phone: String(formData.get("phone") || "").trim(),
+    procedure: String(formData.get("procedure") || "").trim(),
     source: String(formData.get("source") || "Landing page Dra. Vanessa Costa"),
     pageUrl: window.location.href,
   };
 
   if (!lead.name || !lead.phone) return;
+
+  if (!lead.procedure) {
+    if (leadStatus) leadStatus.textContent = "Selecione o procedimento desejado.";
+    return;
+  }
 
   submitButton.disabled = true;
   if (leadStatus) leadStatus.textContent = "Salvando seu atendimento...";
@@ -127,8 +154,7 @@ leadForm?.addEventListener("submit", async (event) => {
   } catch (error) {
     saveLeadFallback(lead);
   } finally {
-    const url = buildWhatsappUrl(lead) || pendingWhatsappUrl;
-    window.location.href = url;
+    window.location.href = buildWhatsappUrl(lead) || pendingWhatsappUrl;
     submitButton.disabled = false;
     closeLeadModal();
   }
