@@ -98,6 +98,9 @@ procedureButtons.forEach((button) => {
 });
 
 leadTriggerLinks.forEach((link) => {
+  const href = link.getAttribute("href") || "";
+  if (href.startsWith("#")) return;
+
   if (link.dataset.leadCapture === "true") return;
   link.dataset.leadCapture = "true";
   link.addEventListener("click", (event) => {
