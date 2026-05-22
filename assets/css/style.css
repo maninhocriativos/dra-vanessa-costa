@@ -1134,55 +1134,204 @@ p {
 }
 
 @media (max-width: 700px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(189, 131, 47, 0.2), transparent 22rem),
+      linear-gradient(180deg, #020201 0%, #090604 48%, #000 100%);
+  }
+
   .section-shell {
-    width: min(100% - 28px, 1240px);
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 16px;
   }
 
   .site-header {
-    min-height: 72px;
-    padding-inline: 14px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: 68px;
+    padding: 10px 16px;
+    border-bottom-width: 2px;
+    background: rgba(255, 252, 245, 0.98);
   }
 
   .brand span {
-    font-size: 1.02rem;
+    max-width: 178px;
+    font-size: 1rem;
+    line-height: 1.05;
   }
 
   .brand small {
     font-size: 0.58rem;
   }
 
+  .nav-toggle {
+    position: fixed;
+    top: 13px;
+    right: auto;
+    left: calc(100vw - 58px);
+    z-index: 80;
+    display: grid !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    grid-template-rows: repeat(2, 2px);
+    gap: 5px;
+    align-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(189, 131, 47, 0.7);
+    background: rgba(189, 131, 47, 0.08);
+  }
+
+  .nav-toggle span {
+    display: block;
+    grid-row: auto;
+    background: #080603;
+  }
+
+  .nav-toggle::before {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #080603;
+    content: "Menu";
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .nav-toggle span {
+    display: none;
+  }
+
+  .site-nav {
+    right: 14px;
+    left: 14px;
+    gap: 4px;
+    padding: 10px;
+    border-radius: 14px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+  }
+
   .hero {
-    padding-top: 72px;
+    width: 100%;
+    overflow: hidden;
+    min-height: auto;
+    padding-top: 68px;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.22), #020201 76%),
+      radial-gradient(circle at 50% 18%, rgba(245, 216, 140, 0.18), transparent 15rem),
+      #020201;
   }
 
   .hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    width: 100%;
+    max-width: 100%;
     min-height: auto;
-    padding: 58px 0 24px;
+    margin-inline: auto;
+    padding: 38px 16px 26px;
+    text-align: center;
+  }
+
+  .hero-copy {
+    display: grid;
+    justify-items: center;
+    width: min(100%, calc(100vw - 32px));
+    max-width: none;
+    margin-inline: auto;
+    text-align: center;
+    transform: translateX(calc(50vw - 50%));
+  }
+
+  .eyebrow {
+    justify-content: center;
+    margin-bottom: 14px;
+    font-size: 0.7rem;
+    transform: translateX(clamp(-44px, -10vw, -28px));
   }
 
   .hero-title {
+    width: min(100%, 358px);
+    max-width: 358px;
+    margin-inline: auto;
+    font-size: clamp(2.35rem, 11.5vw, 2.85rem);
+    line-height: 0.96;
+    text-align: center;
+    transform: translateX(clamp(-44px, -10vw, -28px));
+  }
+
+  .hero-title span {
+    display: block;
+    width: max-content;
     max-width: 100%;
-    font-size: clamp(3.05rem, 13.2vw, 4.35rem);
-    line-height: 0.94;
+    margin-inline: auto;
+    text-align: center;
   }
 
   h2 {
-    font-size: clamp(2.35rem, 11vw, 3.4rem);
+    font-size: clamp(2.2rem, 10.5vw, 3.25rem);
+    line-height: 0.96;
   }
 
-  .btn,
+  .hero-copy p {
+    width: min(100%, 32ch);
+    max-width: 32ch;
+    margin-inline: auto;
+    margin-top: 20px;
+    font-size: 0.96rem;
+    line-height: 1.55;
+    text-align: center;
+    transform: translateX(clamp(-44px, -10vw, -28px));
+  }
+
   .hero-actions {
+    display: grid;
+    width: min(100%, calc(100vw - 32px));
+    max-width: 358px;
+    justify-self: start;
+    gap: 10px;
+    margin-top: 22px;
+    margin-inline: 0;
+  }
+
+  .btn {
     width: 100%;
+    max-width: 100%;
+    min-height: 50px;
+    padding-inline: 18px;
+    font-size: 0.9rem;
   }
 
   .floating-bottle,
+  .hero-glow,
   .name-orbit {
     display: none;
   }
 
+  .hero-portrait {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .hero-portrait img {
-    max-height: none;
-    border-radius: 8px;
+    width: 100%;
+    max-width: 100%;
+    max-height: 520px;
+    aspect-ratio: 0.82;
+    object-position: center top;
+    border-radius: 18px 18px 42% 42%;
+    animation: none;
   }
 
   .authority-strip,
@@ -1192,13 +1341,41 @@ p {
     grid-template-columns: 1fr;
   }
 
+  .authority-strip {
+    margin-bottom: 24px;
+    border-radius: 14px;
+  }
+
   .authority-strip article {
-    border-right: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 16px;
     border-bottom: 1px solid var(--line);
+    border-right: 0;
   }
 
   .authority-strip article:last-child {
     border-bottom: 0;
+  }
+
+  .authority-strip strong {
+    font-size: 2.25rem;
+  }
+
+  .authority-strip span {
+    font-size: 0.88rem;
+    line-height: 1.35;
+    text-align: left;
+  }
+
+  .marquee-track {
+    padding: 12px 0;
+  }
+
+  .marquee span {
+    font-size: 0.9rem;
   }
 
   .about,
@@ -1206,45 +1383,197 @@ p {
   .results,
   .integrative,
   .final-cta {
-    padding-block: 70px;
+    padding-block: 58px;
+  }
+
+  .about,
+  .integrative {
+    gap: 28px;
+  }
+
+  .about-copy,
+  .integrative-copy,
+  .section-heading,
+  .final-cta {
+    text-align: center;
+  }
+
+  .about-copy p,
+  .integrative-copy p,
+  .cta-card p {
+    max-width: 32ch;
+    margin-inline: auto;
+    font-size: 0.96rem;
+    line-height: 1.58;
+  }
+
+  .gold-list {
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .gold-list li {
+    min-height: auto;
+    padding: 13px 14px 13px 42px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 0.92rem;
   }
 
   .about-media {
-    min-height: 500px;
+    min-height: 0;
+    aspect-ratio: 0.86;
+    border-radius: 18px;
   }
 
   .about-media img {
     width: 100%;
+    height: 100%;
   }
 
   .years-card {
-    top: 18px;
-    left: 18px;
-    width: 150px;
-    height: 132px;
+    top: 14px;
+    left: 14px;
+    width: 132px;
+    height: 112px;
+    border-radius: 16px;
   }
 
   .years-card strong {
-    font-size: 3.7rem;
+    font-size: 3.25rem;
+  }
+
+  .years-card span {
+    font-size: 0.86rem;
+  }
+
+  .section-heading {
+    margin-bottom: 26px;
+  }
+
+  .treatment-gallery,
+  .results-grid {
+    gap: 14px;
   }
 
   .treatment-card,
   .treatment-card img {
-    min-height: 420px;
+    min-height: 350px;
+  }
+
+  .treatment-card {
+    border-radius: 18px;
+  }
+
+  .treatment-card div {
+    right: 18px;
+    bottom: 20px;
+    left: 18px;
+  }
+
+  .treatment-card h3 {
+    max-width: 12ch;
+    font-size: 1.85rem;
+  }
+
+  .treatment-card p {
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+  }
+
+  .results-grid img,
+  .integrative-media,
+  .cta-card {
+    border-radius: 18px;
+  }
+
+  .integrative-media {
+    min-height: 280px;
   }
 
   .integrative-media img {
     width: 100%;
+    min-height: 280px;
     opacity: 0.72;
   }
 
   .integrative-media strong {
     right: 24px;
+    font-size: 4rem;
+  }
+
+  .vitamin-grid article {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .cta-card {
+    gap: 24px;
+    padding: 28px 20px;
+  }
+
+  .contact-box {
+    justify-items: center;
+  }
+
+  .lead-modal {
+    align-items: start;
+    padding: 14px;
+    overflow-y: auto;
+  }
+
+  .lead-dialog {
+    width: min(100%, 380px);
+    gap: 10px;
+    margin-block: 10px;
+    padding: 28px 18px 22px;
+    border-radius: 18px;
+  }
+
+  .lead-close {
+    top: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .lead-dialog h2 {
+    font-size: clamp(2.05rem, 12vw, 2.9rem);
+  }
+
+  .lead-dialog p {
+    max-width: 27ch;
+    font-size: 0.9rem;
+  }
+
+  .lead-field,
+  .procedure-field,
+  .lead-dialog .btn {
+    width: 100%;
+  }
+
+  .lead-dialog input,
+  .procedure-option {
+    min-height: 52px;
+    border-radius: 14px;
+  }
+
+  .procedure-option {
+    font-size: 0.76rem;
+  }
+
+  .lead-dialog .btn {
+    min-height: 52px;
+    margin-top: 8px;
+    font-size: 0.78rem;
   }
 
   .whatsapp-float {
     right: 14px;
     bottom: 14px;
+    min-height: 46px;
+    padding-inline: 16px;
+    font-size: 0.78rem;
   }
 }
 
