@@ -1264,7 +1264,7 @@ p {
     margin-inline: auto;
     padding-left: 0 !important;
     text-align: center;
-    transform: translateX(-48px);
+    transform: none;
   }
 
   .eyebrow {
@@ -1909,13 +1909,25 @@ p {
   }
 
   .hero-copy,
-  .hero .hero-copy {
-    transform: translateX(-46px) !important;
-  }
-
+  .hero .hero-copy,
   .hero-portrait,
   .hero .hero-portrait {
-    transform: translateX(-27px) !important;
+    transform: none !important;
+  }
+
+  .hero-inner,
+  .hero-copy,
+  .hero-actions,
+  .hero-portrait {
+    justify-self: center !important;
+  }
+
+  .nav-toggle {
+    position: fixed !important;
+    top: 13px !important;
+    right: 16px !important;
+    left: auto !important;
+    transform: none !important;
   }
 }
 
