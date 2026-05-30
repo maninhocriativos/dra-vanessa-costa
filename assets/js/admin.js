@@ -19,6 +19,7 @@ const els = {
   procedureFilter: document.querySelector("[data-procedure-filter]"),
   startDate: document.querySelector("[data-start-date]"),
   endDate: document.querySelector("[data-end-date]"),
+  clearFilters: document.querySelector("[data-clear-filters]"),
   statTotal: document.querySelector("[data-stat-total]"),
   statFiltered: document.querySelector("[data-stat-filtered]"),
   statTop: document.querySelector("[data-stat-top]"),
@@ -83,6 +84,12 @@ const showDashboard = () => {
 
 const getLeadDay = (lead) => String(lead.created_at || "").slice(0, 10);
 
+const getComparableDay = (value) => {
+  const text = String(value || "").trim();
+  const match = text.match(/\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : "";
+};
+
 const applyFilters = () => {
   const query = normalize(els.search.value);
   const procedure = normalize(els.procedureFilter.value);
@@ -92,7 +99,7 @@ const applyFilters = () => {
   state.filtered = state.leads.filter((lead) => {
     const leadText = normalize(`${lead.name} ${lead.phone} ${lead.procedure} ${lead.source}`);
     const leadProcedure = normalize(lead.procedure || "Sem procedimento");
-    const day = getLeadDay(lead);
+    const day = getComparableDay(lead.created_at);
 
     if (query && !leadText.includes(query)) return false;
     if (procedure && leadProcedure !== procedure) return false;
@@ -161,11 +168,11 @@ const renderTable = () => {
     .map(
       (lead) => `
         <tr>
-          <td>${formatDateTime(lead.created_at)}</td>
-          <td>${escapeHtml(lead.name)}</td>
-          <td>${escapeHtml(lead.phone)}</td>
-          <td>${escapeHtml(lead.procedure || "Sem procedimento")}</td>
-          <td>
+          <td data-label="Data">${formatDateTime(lead.created_at)}</td>
+          <td data-label="Nome">${escapeHtml(lead.name)}</td>
+          <td data-label="Telefone">${escapeHtml(lead.phone)}</td>
+          <td data-label="Procedimento">${escapeHtml(lead.procedure || "Sem procedimento")}</td>
+          <td data-label="Origem">
             ${escapeHtml(lead.source || "Landing page")}
             ${lead.page_url ? `<small>${escapeHtml(lead.page_url)}</small>` : ""}
           </td>
@@ -258,6 +265,15 @@ els.accessForm?.addEventListener("submit", (event) => {
 
 [els.search, els.procedureFilter, els.startDate, els.endDate].forEach((input) => {
   input?.addEventListener("input", applyFilters);
+  input?.addEventListener("change", applyFilters);
+});
+
+els.clearFilters?.addEventListener("click", () => {
+  els.search.value = "";
+  els.procedureFilter.value = "";
+  els.startDate.value = "";
+  els.endDate.value = "";
+  applyFilters();
 });
 
 els.refresh?.addEventListener("click", () => {
