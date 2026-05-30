@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin Leads | Dra. Vanessa Costa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/admin.css?v=20260530-admin-leads" />
+  </head>
+  <body>
+    <main class="admin-page">
+      <section class="admin-hero">
+        <div>
+          <span class="eyebrow">Painel administrativo</span>
+          <h1>Leads capturados pelo site</h1>
+          <p>Visualize os contatos do modal, acompanhe procedimentos desejados e gere relatórios em PDF.</p>
+        </div>
+        <div class="hero-actions">
+          <button class="btn btn-ghost" type="button" data-refresh>Atualizar</button>
+          <button class="btn btn-gold" type="button" data-print>Gerar PDF</button>
+        </div>
+      </section>
+
+      <section class="access-card" data-access-card hidden>
+        <div>
+          <span class="eyebrow">Acesso restrito</span>
+          <h2>Entre com login e senha</h2>
+          <p>O acesso aos leads e protegido por usuario e senha configurados no Cloudflare.</p>
+        </div>
+        <form class="access-form" data-access-form>
+          <input type="text" name="username" placeholder="Login" autocomplete="username" />
+          <input type="password" name="password" placeholder="Senha" autocomplete="current-password" />
+          <button class="btn btn-gold" type="submit">Entrar</button>
+        </form>
+      </section>
+
+      <section class="toolbar" aria-label="Filtros">
+        <label>
+          Buscar lead
+          <input data-search type="search" placeholder="Nome, telefone ou procedimento" />
+        </label>
+        <label>
+          Procedimento
+          <select data-procedure-filter>
+            <option value="">Todos</option>
+          </select>
+        </label>
+        <label>
+          Inicio
+          <input data-start-date type="date" />
+        </label>
+        <label>
+          Fim
+          <input data-end-date type="date" />
+        </label>
+      </section>
+
+      <section class="stats-grid" aria-label="Resumo">
+        <article>
+          <span>Total de leads</span>
+          <strong data-stat-total>0</strong>
+        </article>
+        <article>
+          <span>Filtrados</span>
+          <strong data-stat-filtered>0</strong>
+        </article>
+        <article>
+          <span>Procedimento mais buscado</span>
+          <strong data-stat-top>--</strong>
+        </article>
+        <article>
+          <span>Ultimo cadastro</span>
+          <strong data-stat-latest>--</strong>
+        </article>
+      </section>
+
+      <section class="report-card">
+        <div class="section-title">
+          <div>
+            <span class="eyebrow">Relatorio</span>
+            <h2>Lista de leads</h2>
+          </div>
+          <span class="generated" data-generated>Carregando...</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Procedimento</th>
+                <th>Origem</th>
+              </tr>
+            </thead>
+            <tbody data-leads-table>
+              <tr>
+                <td colspan="5">Carregando leads...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="charts-grid">
+        <article class="report-card">
+          <div class="section-title">
+            <div>
+              <span class="eyebrow">Procedimentos</span>
+              <h2>Interesse por servico</h2>
+            </div>
+          </div>
+          <div class="bars" data-procedure-bars></div>
+        </article>
+
+        <article class="report-card">
+          <div class="section-title">
+            <div>
+              <span class="eyebrow">Historico</span>
+              <h2>Leads por dia</h2>
+            </div>
+          </div>
+          <div class="bars" data-daily-bars></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="assets/js/admin.js?v=20260530-admin-leads"></script>
+  </body>
+</html>

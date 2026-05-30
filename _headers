@@ -9,6 +9,10 @@
 /index.html
   Cache-Control: no-cache
 
+/admin.html
+  Cache-Control: no-cache, no-store, must-revalidate
+  X-Robots-Tag: noindex, nofollow
+
 /assets/js/*
   Cache-Control: no-cache
 
