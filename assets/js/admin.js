@@ -8,9 +8,12 @@ const state = {
 };
 
 const els = {
-  accessCard: document.querySelector("[data-access-card]"),
+  loginScreen: document.querySelector("[data-login-screen]"),
+  dashboard: document.querySelector("[data-dashboard]"),
   accessForm: document.querySelector("[data-access-form]"),
+  loginMessage: document.querySelector("[data-login-message]"),
   refresh: document.querySelector("[data-refresh]"),
+  logout: document.querySelector("[data-logout]"),
   print: document.querySelector("[data-print]"),
   search: document.querySelector("[data-search]"),
   procedureFilter: document.querySelector("[data-procedure-filter]"),
@@ -64,6 +67,18 @@ const getAuthHeaders = () => {
   return {
     Authorization: `Basic ${btoa(`${state.username}:${state.password}`)}`,
   };
+};
+
+const showLogin = (message = "") => {
+  els.loginScreen.hidden = false;
+  els.dashboard.hidden = true;
+  if (els.loginMessage) els.loginMessage.textContent = message;
+};
+
+const showDashboard = () => {
+  els.loginScreen.hidden = true;
+  els.dashboard.hidden = false;
+  if (els.loginMessage) els.loginMessage.textContent = "";
 };
 
 const getLeadDay = (lead) => String(lead.created_at || "").slice(0, 10);
@@ -189,11 +204,17 @@ const render = () => {
 };
 
 const setLoading = (message) => {
+  if (!els.generated || !els.table) return;
   els.generated.textContent = message;
   els.table.innerHTML = `<tr><td colspan="5">${message}</td></tr>`;
 };
 
 const loadLeads = async () => {
+  if (!state.username || !state.password) {
+    showLogin();
+    return;
+  }
+
   setLoading("Carregando leads...");
 
   const response = await fetch(buildEndpoint(), {
@@ -201,9 +222,12 @@ const loadLeads = async () => {
   });
 
   if (response.status === 401 || response.status === 503) {
-    els.accessCard.hidden = false;
     const data = await response.json().catch(() => ({}));
-    setLoading(data.error || "Entre com login e senha para carregar os dados.");
+    sessionStorage.removeItem("dra_vanessa_admin_user");
+    sessionStorage.removeItem("dra_vanessa_admin_password");
+    state.username = "";
+    state.password = "";
+    showLogin(data.error || "Entre com login e senha para carregar os dados.");
     return;
   }
 
@@ -215,7 +239,7 @@ const loadLeads = async () => {
   state.leads = data.leads || [];
   state.procedures = data.procedures || [];
   state.daily = data.daily || [];
-  els.accessCard.hidden = true;
+  showDashboard();
   els.generated.textContent = `Atualizado em ${formatDateTime(data.generatedAt)}`;
   renderProcedureOptions();
   applyFilters();
@@ -228,6 +252,7 @@ els.accessForm?.addEventListener("submit", (event) => {
   state.password = String(formData.get("password") || "");
   sessionStorage.setItem("dra_vanessa_admin_user", state.username);
   sessionStorage.setItem("dra_vanessa_admin_password", state.password);
+  if (els.loginMessage) els.loginMessage.textContent = "Validando acesso...";
   loadLeads().catch((error) => setLoading(error.message));
 });
 
@@ -239,9 +264,23 @@ els.refresh?.addEventListener("click", () => {
   loadLeads().catch((error) => setLoading(error.message));
 });
 
+els.logout?.addEventListener("click", () => {
+  sessionStorage.removeItem("dra_vanessa_admin_user");
+  sessionStorage.removeItem("dra_vanessa_admin_password");
+  state.username = "";
+  state.password = "";
+  state.leads = [];
+  state.filtered = [];
+  showLogin("Sessao encerrada.");
+});
+
 els.print?.addEventListener("click", () => {
   document.title = `Relatorio de Leads - Dra Vanessa Costa - ${new Date().toLocaleDateString("pt-BR")}`;
   window.print();
 });
 
-loadLeads().catch((error) => setLoading(error.message));
+if (state.username && state.password) {
+  loadLeads().catch((error) => showLogin(error.message));
+} else {
+  showLogin();
+}
