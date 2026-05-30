@@ -1,52 +1,11 @@
-const jsonHeaders = {
-  "Content-Type": "application/json; charset=utf-8",
-  "Cache-Control": "no-store",
-};
-
-const decodeBasicAuth = (request) => {
-  const authorization = request.headers.get("authorization") || "";
-  if (!authorization.toLowerCase().startsWith("basic ")) return null;
-
-  try {
-    const decoded = atob(authorization.slice(6).trim());
-    const separator = decoded.indexOf(":");
-    if (separator === -1) return null;
-
-    return {
-      username: decoded.slice(0, separator),
-      password: decoded.slice(separator + 1),
-    };
-  } catch (error) {
-    return null;
-  }
-};
-
-const assertAdminAccess = (request, env) => {
-  const expectedUser = env.ADMIN_USER || "";
-  const expectedPassword = env.ADMIN_PASSWORD || "";
-
-  if (!expectedUser || !expectedPassword) {
-    return Response.json(
-      { error: "ADMIN_USER e ADMIN_PASSWORD nao configurados no Cloudflare Pages." },
-      { status: 503, headers: jsonHeaders }
-    );
-  }
-
-  const credentials = decodeBasicAuth(request);
-  if (credentials?.username === expectedUser && credentials?.password === expectedPassword) return null;
-
-  return Response.json(
-    { error: "Login ou senha invalidos." },
-    { status: 401, headers: jsonHeaders }
-  );
-};
+import { assertAdminAccess, ensurePartnerSchema, jsonHeaders } from "../../_admin.js";
 
 export async function onRequestGet(context) {
   const restricted = assertAdminAccess(context.request, context.env);
   if (restricted) return restricted;
 
   try {
-    await context.env.DB.prepare("ALTER TABLE leads ADD COLUMN procedure TEXT").run().catch(() => {});
+    await ensurePartnerSchema(context.env.DB);
 
     const url = new URL(context.request.url);
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit")) || 1000, 1), 5000);
@@ -58,6 +17,8 @@ export async function onRequestGet(context) {
         phone,
         COALESCE(procedure, '') AS procedure,
         COALESCE(source, '') AS source,
+        COALESCE(partner_code, '') AS partner_code,
+        COALESCE(partner_name, '') AS partner_name,
         COALESCE(page_url, '') AS page_url,
         COALESCE(user_agent, '') AS user_agent,
         created_at

@@ -16,6 +16,8 @@ export async function onRequestPost(context) {
     const procedure = String(payload.procedure || "").trim();
     const source = String(payload.source || "Landing page Dra. Vanessa Costa").trim();
     const pageUrl = String(payload.pageUrl || "").trim();
+    const partnerCode = String(payload.partnerCode || "").trim();
+    const partnerName = String(payload.partnerName || "").trim();
     const userAgent = context.request.headers.get("user-agent") || "";
 
     if (!name || !phone || !procedure) {
@@ -23,11 +25,14 @@ export async function onRequestPost(context) {
     }
 
     await context.env.DB.prepare("ALTER TABLE leads ADD COLUMN procedure TEXT").run().catch(() => {});
+    await context.env.DB.prepare("ALTER TABLE leads ADD COLUMN partner_code TEXT").run().catch(() => {});
+    await context.env.DB.prepare("ALTER TABLE leads ADD COLUMN partner_name TEXT").run().catch(() => {});
 
     await context.env.DB.prepare(
-      "INSERT INTO leads (name, phone, procedure, source, page_url, user_agent) VALUES (?, ?, ?, ?, ?, ?)"
+      `INSERT INTO leads (name, phone, procedure, source, partner_code, partner_name, page_url, user_agent)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
     )
-      .bind(name, phone, procedure, source, pageUrl, userAgent)
+      .bind(name, phone, procedure, source, partnerCode, partnerName, pageUrl, userAgent)
       .run();
 
     return Response.json({ ok: true }, { headers: corsHeaders });

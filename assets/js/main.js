@@ -55,6 +55,23 @@ const whatsappNumber = "5592985338279";
 const whatsappMessage = "Olá, Dra. Vanessa! Vim pelo site e gostaria de agendar um atendimento.";
 
 const leadEndpoint = window.DRA_VANESSA_LEAD_ENDPOINT || "/api/leads";
+const partnerParams = new URLSearchParams(window.location.search);
+const partnerFromUrl = {
+  code: String(partnerParams.get("ref") || "").trim(),
+  name: String(partnerParams.get("partner") || "").trim(),
+};
+
+if (partnerFromUrl.code) {
+  localStorage.setItem("dra_vanessa_partner", JSON.stringify(partnerFromUrl));
+}
+
+const getPartnerInfo = () => {
+  try {
+    return JSON.parse(localStorage.getItem("dra_vanessa_partner") || "{}");
+  } catch (error) {
+    return {};
+  }
+};
 let pendingWhatsappUrl = "";
 
 const buildWhatsappUrl = ({ name, phone, procedure } = {}) => {
@@ -132,6 +149,8 @@ leadForm?.addEventListener("submit", async (event) => {
     procedure: String(formData.get("procedure") || "").trim(),
     source: String(formData.get("source") || "Landing page Dra. Vanessa Costa"),
     pageUrl: window.location.href,
+    partnerCode: String(getPartnerInfo().code || ""),
+    partnerName: String(getPartnerInfo().name || ""),
   };
 
   if (!lead.name || !lead.phone) return;

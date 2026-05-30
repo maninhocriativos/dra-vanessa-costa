@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/css/admin.css?v=20260530-admin-mobile-filters" />
+    <link rel="stylesheet" href="assets/css/admin.css?v=20260530-partners-cards" />
   </head>
   <body>
     <main class="admin-page">
@@ -48,106 +48,119 @@
             <p>Contatos recebidos pelo modal, filtros e relatorio em PDF.</p>
           </div>
           <div class="hero-actions">
+            <button class="btn btn-tab is-active" type="button" data-tab="leads">Leads</button>
+            <button class="btn btn-tab" type="button" data-tab="partners">Parceiros</button>
             <button class="btn btn-ghost" type="button" data-refresh>Atualizar</button>
             <button class="btn btn-ghost" type="button" data-logout>Sair</button>
             <button class="btn btn-gold" type="button" data-print>Gerar PDF</button>
           </div>
         </section>
 
-        <section class="toolbar" aria-label="Filtros">
-          <label>
-            Buscar lead
-            <input data-search type="search" placeholder="Nome, telefone ou procedimento" />
-          </label>
-          <label>
-            Procedimento
-            <select data-procedure-filter>
-              <option value="">Todos</option>
-            </select>
-          </label>
-          <label>
-            Inicio
-            <input data-start-date type="date" />
-          </label>
-          <label>
-            Fim
-            <input data-end-date type="date" />
-          </label>
-          <button class="btn btn-ghost filter-clear" type="button" data-clear-filters>Limpar filtros</button>
-        </section>
+        <div data-tab-panel="leads">
+          <section class="toolbar" aria-label="Filtros">
+            <label>
+              Buscar lead
+              <input data-search type="search" placeholder="Nome, telefone ou procedimento" />
+            </label>
+            <label>
+              Procedimento
+              <select data-procedure-filter>
+                <option value="">Todos</option>
+              </select>
+            </label>
+            <label>
+              Inicio
+              <input data-start-date type="date" />
+            </label>
+            <label>
+              Fim
+              <input data-end-date type="date" />
+            </label>
+            <button class="btn btn-ghost filter-clear" type="button" data-clear-filters>Limpar filtros</button>
+          </section>
 
-        <section class="stats-grid" aria-label="Resumo">
-          <article>
-            <span>Total</span>
-            <strong data-stat-total>0</strong>
-          </article>
-          <article>
-            <span>Filtrados</span>
-            <strong data-stat-filtered>0</strong>
-          </article>
-          <article>
-            <span>Mais buscado</span>
-            <strong data-stat-top>--</strong>
-          </article>
-          <article>
-            <span>Ultimo lead</span>
-            <strong data-stat-latest>--</strong>
-          </article>
-        </section>
+          <section class="stats-grid" aria-label="Resumo">
+            <article>
+              <span>Total</span>
+              <strong data-stat-total>0</strong>
+            </article>
+            <article>
+              <span>Filtrados</span>
+              <strong data-stat-filtered>0</strong>
+            </article>
+            <article>
+              <span>Mais buscado</span>
+              <strong data-stat-top>--</strong>
+            </article>
+            <article>
+              <span>Ultimo lead</span>
+              <strong data-stat-latest>--</strong>
+            </article>
+          </section>
 
-        <section class="report-card">
-          <div class="section-title">
-            <div>
-              <span class="eyebrow">Relatorio</span>
-              <h2>Lista de leads</h2>
-            </div>
-            <span class="generated" data-generated>Carregando...</span>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Nome</th>
-                  <th>Telefone</th>
-                  <th>Procedimento</th>
-                  <th>Origem</th>
-                </tr>
-              </thead>
-              <tbody data-leads-table>
-                <tr>
-                  <td colspan="5">Carregando leads...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="charts-grid">
-          <article class="report-card">
+          <section class="report-card">
             <div class="section-title">
               <div>
-                <span class="eyebrow">Procedimentos</span>
-                <h2>Interesse</h2>
+                <span class="eyebrow">Relatorio</span>
+                <h2>Leads recebidos</h2>
               </div>
+              <span class="generated" data-generated>Carregando...</span>
             </div>
-            <div class="bars" data-procedure-bars></div>
-          </article>
+            <div class="lead-cards" data-leads-table>Carregando leads...</div>
+          </section>
 
-          <article class="report-card">
-            <div class="section-title">
-              <div>
-                <span class="eyebrow">Historico</span>
-                <h2>Leads por dia</h2>
+          <section class="charts-grid">
+            <article class="report-card">
+              <div class="section-title">
+                <div>
+                  <span class="eyebrow">Procedimentos</span>
+                  <h2>Interesse</h2>
+                </div>
               </div>
-            </div>
-            <div class="bars" data-daily-bars></div>
-          </article>
-        </section>
+              <div class="bars" data-procedure-bars></div>
+            </article>
+
+            <article class="report-card">
+              <div class="section-title">
+                <div>
+                  <span class="eyebrow">Historico</span>
+                  <h2>Leads por dia</h2>
+                </div>
+              </div>
+              <div class="bars" data-daily-bars></div>
+            </article>
+          </section>
+        </div>
+
+        <div data-tab-panel="partners" hidden>
+          <section class="partner-grid">
+            <form class="report-card partner-form" data-partner-form>
+              <span class="eyebrow">Novo parceiro</span>
+              <h2>Cadastrar influenciador</h2>
+              <label>Nome do influenciador<input name="name" placeholder="Ex: Maria Silva" required /></label>
+              <label>Codigo do link<input name="code" placeholder="Ex: maria-silva" /></label>
+              <label>Cidade<input name="city" placeholder="Cidade" /></label>
+              <label>Estado<input name="state" placeholder="AM" /></label>
+              <label>Instagram<input name="instagram" placeholder="@perfil" /></label>
+              <label>Observacoes<input name="notes" placeholder="Campanha, contrato ou combinados" /></label>
+              <button class="btn btn-gold" type="submit">Gerar link</button>
+              <small data-partner-status></small>
+            </form>
+
+            <section class="report-card">
+              <div class="section-title">
+                <div>
+                  <span class="eyebrow">Parceiros</span>
+                  <h2>Links e resultados</h2>
+                </div>
+              </div>
+              <div class="partner-cards" data-partners-list>Carregando parceiros...</div>
+            </section>
+          </section>
+        </div>
       </div>
     </main>
 
-    <script src="assets/js/admin.js?v=20260530-admin-mobile-filters"></script>
+    <script src="assets/js/admin.js?v=20260530-partners-cards"></script>
   </body>
 </html>

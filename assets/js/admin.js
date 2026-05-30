@@ -1,5 +1,7 @@
 const state = {
   leads: [],
+  partners: [],
+  partnerLocations: [],
   procedures: [],
   daily: [],
   filtered: [],
@@ -20,6 +22,11 @@ const els = {
   startDate: document.querySelector("[data-start-date]"),
   endDate: document.querySelector("[data-end-date]"),
   clearFilters: document.querySelector("[data-clear-filters]"),
+  tabs: document.querySelectorAll("[data-tab]"),
+  tabPanels: document.querySelectorAll("[data-tab-panel]"),
+  partnerForm: document.querySelector("[data-partner-form]"),
+  partnerStatus: document.querySelector("[data-partner-status]"),
+  partnersList: document.querySelector("[data-partners-list]"),
   statTotal: document.querySelector("[data-stat-total]"),
   statFiltered: document.querySelector("[data-stat-filtered]"),
   statTop: document.querySelector("[data-stat-top]"),
@@ -63,6 +70,8 @@ const buildEndpoint = () => {
   return url;
 };
 
+const buildPartnersEndpoint = () => new URL("/api/admin/partners", window.location.origin);
+
 const getAuthHeaders = () => {
   if (!state.username || !state.password) return {};
   return {
@@ -97,7 +106,9 @@ const applyFilters = () => {
   const end = els.endDate.value;
 
   state.filtered = state.leads.filter((lead) => {
-    const leadText = normalize(`${lead.name} ${lead.phone} ${lead.procedure} ${lead.source}`);
+    const leadText = normalize(
+      `${lead.name} ${lead.phone} ${lead.procedure} ${lead.source} ${lead.partner_name} ${lead.partner_code}`
+    );
     const leadProcedure = normalize(lead.procedure || "Sem procedimento");
     const day = getComparableDay(lead.created_at);
 
@@ -160,26 +171,85 @@ const renderBars = (target, rows, labelKey) => {
 
 const renderTable = () => {
   if (!state.filtered.length) {
-    els.table.innerHTML = '<tr><td class="empty-state" colspan="5">Nenhum lead encontrado.</td></tr>';
+    els.table.innerHTML = '<p class="empty-state">Nenhum lead encontrado.</p>';
     return;
   }
 
   els.table.innerHTML = state.filtered
     .map(
       (lead) => `
-        <tr>
-          <td data-label="Data">${formatDateTime(lead.created_at)}</td>
-          <td data-label="Nome">${escapeHtml(lead.name)}</td>
-          <td data-label="Telefone">${escapeHtml(lead.phone)}</td>
-          <td data-label="Procedimento">${escapeHtml(lead.procedure || "Sem procedimento")}</td>
-          <td data-label="Origem">
-            ${escapeHtml(lead.source || "Landing page")}
-            ${lead.page_url ? `<small>${escapeHtml(lead.page_url)}</small>` : ""}
-          </td>
-        </tr>
+        <article class="lead-card">
+          <button class="lead-card-head" type="button">
+            <span>
+              <strong>${escapeHtml(lead.name)}</strong>
+              <small>${formatDateTime(lead.created_at)}</small>
+            </span>
+            <span>
+              <b>${escapeHtml(lead.procedure || "Sem procedimento")}</b>
+              <small>${escapeHtml(lead.phone)}</small>
+            </span>
+          </button>
+          <div class="lead-card-body">
+            <dl>
+              <div><dt>Nome</dt><dd>${escapeHtml(lead.name)}</dd></div>
+              <div><dt>Telefone</dt><dd>${escapeHtml(lead.phone)}</dd></div>
+              <div><dt>Procedimento</dt><dd>${escapeHtml(lead.procedure || "Sem procedimento")}</dd></div>
+              <div><dt>Parceiro</dt><dd>${escapeHtml(lead.partner_name || lead.partner_code || "Direto")}</dd></div>
+              <div><dt>Origem</dt><dd>${escapeHtml(lead.source || "Landing page")}</dd></div>
+              <div><dt>Pagina</dt><dd>${escapeHtml(lead.page_url || "--")}</dd></div>
+            </dl>
+          </div>
+        </article>
       `
     )
     .join("");
+};
+
+const getPartnerLink = (code) => `${window.location.origin}/p/${encodeURIComponent(code)}`;
+
+const renderPartners = () => {
+  if (!els.partnersList) return;
+  if (!state.partners.length) {
+    els.partnersList.innerHTML = '<p class="empty-state">Nenhum parceiro cadastrado.</p>';
+    return;
+  }
+
+  els.partnersList.innerHTML = state.partners
+    .map((partner) => {
+      const link = getPartnerLink(partner.code);
+      const locations = state.partnerLocations
+        .filter((item) => item.partner_code === partner.code)
+        .slice(0, 3)
+        .map((item) => `${item.city}${item.region ? `/${item.region}` : ""}: ${item.total}`)
+        .join(" | ");
+      return `
+        <article class="partner-card">
+          <div>
+            <strong>${escapeHtml(partner.name)}</strong>
+            <small>${escapeHtml(partner.instagram || partner.code)}</small>
+          </div>
+          <div class="partner-link">
+            <input value="${escapeHtml(link)}" readonly />
+            <button class="btn btn-ghost" type="button" data-copy-link="${escapeHtml(link)}">Copiar</button>
+          </div>
+          <div class="partner-metrics">
+            <span><b>${partner.clicks || 0}</b> acessos</span>
+            <span><b>${partner.leads || 0}</b> leads</span>
+            <span>${escapeHtml(locations || "Sem origem registrada")}</span>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+};
+
+const loadPartners = async () => {
+  const response = await fetch(buildPartnersEndpoint(), { headers: getAuthHeaders() });
+  if (!response.ok) return;
+  const data = await response.json();
+  state.partners = data.partners || [];
+  state.partnerLocations = data.locations || [];
+  renderPartners();
 };
 
 const renderProcedureOptions = () => {
@@ -250,6 +320,7 @@ const loadLeads = async () => {
   els.generated.textContent = `Atualizado em ${formatDateTime(data.generatedAt)}`;
   renderProcedureOptions();
   applyFilters();
+  loadPartners();
 };
 
 els.accessForm?.addEventListener("submit", (event) => {
@@ -274,6 +345,55 @@ els.clearFilters?.addEventListener("click", () => {
   els.startDate.value = "";
   els.endDate.value = "";
   applyFilters();
+});
+
+els.tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    els.tabs.forEach((item) => item.classList.toggle("is-active", item === tab));
+    els.tabPanels.forEach((panel) => {
+      panel.hidden = panel.dataset.tabPanel !== tab.dataset.tab;
+    });
+    if (tab.dataset.tab === "partners") loadPartners();
+  });
+});
+
+els.partnerForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const formData = new FormData(els.partnerForm);
+  const payload = Object.fromEntries(formData.entries());
+  if (els.partnerStatus) els.partnerStatus.textContent = "Salvando parceiro...";
+
+  const response = await fetch(buildPartnersEndpoint(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    if (els.partnerStatus) els.partnerStatus.textContent = data.error || "Nao foi possivel salvar.";
+    return;
+  }
+
+  els.partnerForm.reset();
+  if (els.partnerStatus) els.partnerStatus.textContent = "Parceiro salvo e link gerado.";
+  loadPartners();
+});
+
+document.addEventListener("click", async (event) => {
+  const head = event.target.closest(".lead-card-head");
+  if (head) {
+    head.closest(".lead-card")?.classList.toggle("is-open");
+  }
+
+  const copyButton = event.target.closest("[data-copy-link]");
+  if (copyButton) {
+    await navigator.clipboard?.writeText(copyButton.dataset.copyLink || "");
+    copyButton.textContent = "Copiado";
+    setTimeout(() => {
+      copyButton.textContent = "Copiar";
+    }, 1400);
+  }
 });
 
 els.refresh?.addEventListener("click", () => {
