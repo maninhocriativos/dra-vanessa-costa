@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/css/admin.css?v=20260530-partners-cards" />
+    <link rel="stylesheet" href="assets/css/admin.css?v=20260530-lead-pagination" />
   </head>
   <body>
     <main class="admin-page">
@@ -107,6 +107,11 @@
               <span class="generated" data-generated>Carregando...</span>
             </div>
             <div class="lead-cards" data-leads-table>Carregando leads...</div>
+            <div class="pagination" data-pagination hidden>
+              <button class="btn btn-ghost" type="button" data-page-prev>Anterior</button>
+              <span data-page-info>Pagina 1 de 1</span>
+              <button class="btn btn-ghost" type="button" data-page-next>Proxima</button>
+            </div>
           </section>
 
           <section class="charts-grid">
@@ -161,6 +166,6 @@
       </div>
     </main>
 
-    <script src="assets/js/admin.js?v=20260530-partners-cards"></script>
+    <script src="assets/js/admin.js?v=20260530-lead-pagination"></script>
   </body>
 </html>

@@ -5,6 +5,8 @@ const state = {
   procedures: [],
   daily: [],
   filtered: [],
+  page: 1,
+  perPage: 15,
   username: sessionStorage.getItem("dra_vanessa_admin_user") || "",
   password: sessionStorage.getItem("dra_vanessa_admin_password") || "",
 };
@@ -27,6 +29,10 @@ const els = {
   partnerForm: document.querySelector("[data-partner-form]"),
   partnerStatus: document.querySelector("[data-partner-status]"),
   partnersList: document.querySelector("[data-partners-list]"),
+  pagination: document.querySelector("[data-pagination]"),
+  pageInfo: document.querySelector("[data-page-info]"),
+  pagePrev: document.querySelector("[data-page-prev]"),
+  pageNext: document.querySelector("[data-page-next]"),
   statTotal: document.querySelector("[data-stat-total]"),
   statFiltered: document.querySelector("[data-stat-filtered]"),
   statTop: document.querySelector("[data-stat-top]"),
@@ -119,6 +125,7 @@ const applyFilters = () => {
     return true;
   });
 
+  state.page = 1;
   render();
 };
 
@@ -172,10 +179,14 @@ const renderBars = (target, rows, labelKey) => {
 const renderTable = () => {
   if (!state.filtered.length) {
     els.table.innerHTML = '<p class="empty-state">Nenhum lead encontrado.</p>';
+    renderPagination();
     return;
   }
 
-  els.table.innerHTML = state.filtered
+  const start = (state.page - 1) * state.perPage;
+  const pageItems = state.filtered.slice(start, start + state.perPage);
+
+  els.table.innerHTML = pageItems
     .map(
       (lead) => `
         <article class="lead-card">
@@ -203,6 +214,18 @@ const renderTable = () => {
       `
     )
     .join("");
+
+  renderPagination();
+};
+
+const renderPagination = () => {
+  if (!els.pagination || !els.pageInfo) return;
+  const totalPages = Math.max(Math.ceil(state.filtered.length / state.perPage), 1);
+  state.page = Math.min(Math.max(state.page, 1), totalPages);
+  els.pagination.hidden = state.filtered.length <= state.perPage;
+  els.pageInfo.textContent = `Pagina ${state.page} de ${totalPages} - ${state.filtered.length} leads`;
+  if (els.pagePrev) els.pagePrev.disabled = state.page <= 1;
+  if (els.pageNext) els.pageNext.disabled = state.page >= totalPages;
 };
 
 const getPartnerLink = (code) => `${window.location.origin}/p/${encodeURIComponent(code)}`;
@@ -283,7 +306,7 @@ const render = () => {
 const setLoading = (message) => {
   if (!els.generated || !els.table) return;
   els.generated.textContent = message;
-  els.table.innerHTML = `<tr><td colspan="5">${message}</td></tr>`;
+  els.table.innerHTML = `<p class="empty-state">${message}</p>`;
 };
 
 const loadLeads = async () => {
@@ -345,6 +368,23 @@ els.clearFilters?.addEventListener("click", () => {
   els.startDate.value = "";
   els.endDate.value = "";
   applyFilters();
+});
+
+els.pagePrev?.addEventListener("click", () => {
+  state.page = Math.max(1, state.page - 1);
+  renderTable();
+});
+
+els.pageNext?.addEventListener("click", () => {
+  const totalPages = Math.max(Math.ceil(state.filtered.length / state.perPage), 1);
+  state.page = Math.min(totalPages, state.page + 1);
+  renderTable();
+});
+
+[els.startDate, els.endDate].forEach((input) => {
+  input?.addEventListener("click", () => {
+    if (typeof input.showPicker === "function") input.showPicker();
+  });
 });
 
 els.tabs.forEach((tab) => {

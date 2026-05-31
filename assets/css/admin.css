@@ -223,6 +223,17 @@ p {
   padding: 0 14px;
 }
 
+.toolbar input[type="date"] {
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+.toolbar input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.86) sepia(0.42) saturate(1.8);
+  opacity: 0.95;
+}
+
 .toolbar {
   display: grid;
   grid-template-columns: minmax(220px, 1.4fr) minmax(170px, 0.85fr) repeat(2, minmax(145px, 0.75fr)) auto;
@@ -306,6 +317,28 @@ p {
 .partner-cards {
   display: grid;
   gap: 12px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.pagination span {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.pagination .btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .lead-card,
@@ -600,6 +633,11 @@ p {
   }
 
   .partner-link {
+    grid-template-columns: 1fr;
+  }
+
+  .pagination {
+    display: grid;
     grid-template-columns: 1fr;
   }
 }
