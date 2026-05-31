@@ -567,13 +567,16 @@ p {
 
 @media (max-width: 520px) {
   .admin-page {
-    width: 100vw;
-    max-width: 100vw;
-    padding: 10px 0 28px;
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 12px 28px;
+    justify-items: center;
   }
 
   .login-screen {
-    margin-left: 10px !important;
+    width: min(360px, 100%) !important;
+    max-width: 360px !important;
+    margin-left: auto !important;
     margin-right: auto !important;
     padding: 24px 18px;
   }
