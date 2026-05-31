@@ -50,6 +50,7 @@ const leadStatus = document.querySelector("[data-lead-status]");
 const leadCloseButtons = document.querySelectorAll("[data-lead-close]");
 const procedureButtons = document.querySelectorAll("[data-procedure-option]");
 const procedureInput = document.querySelector("[data-procedure-input]");
+const procedureField = document.querySelector("[data-procedure-field]");
 const leadTriggerLinks = document.querySelectorAll("a.btn, .treatment-card a, .whatsapp-float, .social-dot");
 const whatsappNumber = "5592985338279";
 const whatsappMessage = "Olá, Dra. Vanessa! Vim pelo site e gostaria de agendar um atendimento.";
@@ -105,6 +106,7 @@ const selectProcedure = (procedure) => {
   procedureButtons.forEach((button) => {
     button.classList.toggle("is-selected", button.dataset.procedureOption === procedure);
   });
+  procedureField?.classList.remove("has-error");
   if (leadStatus) leadStatus.textContent = "";
 };
 
@@ -156,6 +158,7 @@ leadForm?.addEventListener("submit", async (event) => {
   if (!lead.name || !lead.phone) return;
 
   if (!lead.procedure) {
+    procedureField?.classList.add("has-error");
     if (leadStatus) leadStatus.textContent = "Selecione o procedimento desejado.";
     return;
   }

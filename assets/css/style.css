@@ -986,6 +986,17 @@ p {
   text-align: center;
 }
 
+.procedure-field legend span {
+  color: #ffb8b8;
+}
+
+.procedure-field.has-error .procedure-option {
+  border-color: #ffb8b8;
+  box-shadow:
+    0 0 0 1px rgba(255, 184, 184, 0.32),
+    inset 0 0 0 1px rgba(255, 184, 184, 0.12);
+}
+
 .procedure-option {
   min-height: 58px;
   padding: 0 16px;

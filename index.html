@@ -268,8 +268,8 @@
           <span>Telefone</span>
           <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="(92) 99999-9999" required />
         </label>
-        <fieldset class="procedure-field">
-          <legend>Qual procedimento você deseja?</legend>
+        <fieldset class="procedure-field" aria-required="true" data-procedure-field>
+          <legend>Qual procedimento você deseja? <span>*</span></legend>
           <button class="procedure-option" type="button" data-procedure-option="Harmonização facial">
             Harmonização facial
           </button>
@@ -277,7 +277,7 @@
             Exame Quântico
           </button>
         </fieldset>
-        <input type="hidden" name="procedure" data-procedure-input required />
+        <input type="hidden" name="procedure" data-procedure-input required aria-required="true" />
         <input type="hidden" name="source" value="Landing page Dra. Vanessa Costa" />
         <button class="btn btn-gold" type="submit">Continuar para o WhatsApp</button>
         <small data-lead-status></small>
